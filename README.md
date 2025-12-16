@@ -1,5 +1,10 @@
 # MCPGate - Local MCP Server Gateway
 
+[![Test](https://github.com/j4ng5y/mcpgate/actions/workflows/test.yml/badge.svg)](https://github.com/j4ng5y/mcpgate/actions/workflows/test.yml)
+[![codecov](https://codecov.io/gh/j4ng5y/mcpgate/branch/main/graph/badge.svg)](https://codecov.io/gh/j4ng5y/mcpgate)
+[![Go Report Card](https://goreportcard.com/badge/github.com/j4ng5y/mcpgate)](https://goreportcard.com/report/github.com/j4ng5y/mcpgate)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 MCPGate is a local, dockerless MCP (Model Context Protocol) gateway that provides unified access to multiple upstream MCP servers. It acts as an MCP server itself, aggregating connections to various MCP servers and providing centralized request routing, connection management, and server discovery.
 
 ## Features
