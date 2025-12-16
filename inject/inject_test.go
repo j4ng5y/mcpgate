@@ -130,6 +130,48 @@ func TestOpenCode_Name(t *testing.T) {
 	}
 }
 
+func TestOpenCode_InjectHTTP_MemoryConfig(t *testing.T) {
+	tmpDir := t.TempDir()
+	configPath := filepath.Join(tmpDir, "opencode_config.json")
+
+	opencode := NewOpenCode()
+	// Override config path for testing
+	opencode.configPath = configPath
+
+	// Test that we can inject via HTTP
+	err := opencode.InjectHTTP("http://localhost:8000", "mcpgate", nil)
+	if err != nil {
+		t.Fatalf("Failed to inject HTTP: %v", err)
+	}
+
+	// Test that IsInjected returns true after injection
+	isInjected := opencode.IsInjected("mcpgate")
+	if !isInjected {
+		t.Error("Expected IsInjected to return true after HTTP injection")
+	}
+}
+
+func TestOpenCode_InjectStdio_MemoryConfig(t *testing.T) {
+	tmpDir := t.TempDir()
+	configPath := filepath.Join(tmpDir, "opencode_config.json")
+
+	opencode := NewOpenCode()
+	// Override config path for testing
+	opencode.configPath = configPath
+
+	// Test that we can inject via stdio
+	err := opencode.InjectStdio("/path/to/mcpgate", []string{"server"}, "mcpgate", nil)
+	if err != nil {
+		t.Fatalf("Failed to inject stdio: %v", err)
+	}
+
+	// Test that IsInjected returns true after injection
+	isInjected := opencode.IsInjected("mcpgate")
+	if !isInjected {
+		t.Error("Expected IsInjected to return true after stdio injection")
+	}
+}
+
 func TestClaude_InjectHTTP_Eject_MemoryConfig(t *testing.T) {
 	tmpDir := t.TempDir()
 	configPath := filepath.Join(tmpDir, "claude_config.json")

@@ -33,7 +33,7 @@ Supported agents:
   - Zed (local configuration)
   - Gemini CLI (local configuration)
   - Codex CLI (local configuration)
-  - OpenCode (coming soon)`,
+  - OpenCode (local configuration)`,
 	Run: runInject,
 }
 
