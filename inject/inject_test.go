@@ -172,6 +172,104 @@ func TestOpenCode_InjectStdio_MemoryConfig(t *testing.T) {
 	}
 }
 
+func TestWindsurf_Name(t *testing.T) {
+	windsurf := NewWindsurf()
+	if windsurf.Name() != "Windsurf" {
+		t.Errorf("Expected name 'Windsurf', got '%s'", windsurf.Name())
+	}
+}
+
+func TestWindsurf_InjectHTTP_MemoryConfig(t *testing.T) {
+	tmpDir := t.TempDir()
+	configPath := filepath.Join(tmpDir, "windsurf_config.json")
+
+	windsurf := NewWindsurf()
+	// Override config path for testing
+	windsurf.configPath = configPath
+
+	// Test that we can inject via HTTP
+	err := windsurf.InjectHTTP("http://localhost:8000", "mcpgate", nil)
+	if err != nil {
+		t.Fatalf("Failed to inject HTTP: %v", err)
+	}
+
+	// Test that IsInjected returns true after injection
+	isInjected := windsurf.IsInjected("mcpgate")
+	if !isInjected {
+		t.Error("Expected IsInjected to return true after HTTP injection")
+	}
+}
+
+func TestWindsurf_InjectStdio_MemoryConfig(t *testing.T) {
+	tmpDir := t.TempDir()
+	configPath := filepath.Join(tmpDir, "windsurf_config.json")
+
+	windsurf := NewWindsurf()
+	// Override config path for testing
+	windsurf.configPath = configPath
+
+	// Test that we can inject via stdio
+	err := windsurf.InjectStdio("/path/to/mcpgate", []string{"server"}, "mcpgate", nil)
+	if err != nil {
+		t.Fatalf("Failed to inject stdio: %v", err)
+	}
+
+	// Test that IsInjected returns true after injection
+	isInjected := windsurf.IsInjected("mcpgate")
+	if !isInjected {
+		t.Error("Expected IsInjected to return true after stdio injection")
+	}
+}
+
+func TestKiro_Name(t *testing.T) {
+	kiro := NewKiro()
+	if kiro.Name() != "Kiro" {
+		t.Errorf("Expected name 'Kiro', got '%s'", kiro.Name())
+	}
+}
+
+func TestKiro_InjectHTTP_MemoryConfig(t *testing.T) {
+	tmpDir := t.TempDir()
+	configPath := filepath.Join(tmpDir, "kiro_config.json")
+
+	kiro := NewKiro()
+	// Override config path for testing
+	kiro.configPath = configPath
+
+	// Test that we can inject via HTTP
+	err := kiro.InjectHTTP("http://localhost:8000", "mcpgate", nil)
+	if err != nil {
+		t.Fatalf("Failed to inject HTTP: %v", err)
+	}
+
+	// Test that IsInjected returns true after injection
+	isInjected := kiro.IsInjected("mcpgate")
+	if !isInjected {
+		t.Error("Expected IsInjected to return true after HTTP injection")
+	}
+}
+
+func TestKiro_InjectStdio_MemoryConfig(t *testing.T) {
+	tmpDir := t.TempDir()
+	configPath := filepath.Join(tmpDir, "kiro_config.json")
+
+	kiro := NewKiro()
+	// Override config path for testing
+	kiro.configPath = configPath
+
+	// Test that we can inject via stdio
+	err := kiro.InjectStdio("/path/to/mcpgate", []string{"server"}, "mcpgate", nil)
+	if err != nil {
+		t.Fatalf("Failed to inject stdio: %v", err)
+	}
+
+	// Test that IsInjected returns true after injection
+	isInjected := kiro.IsInjected("mcpgate")
+	if !isInjected {
+		t.Error("Expected IsInjected to return true after stdio injection")
+	}
+}
+
 func TestClaude_InjectHTTP_Eject_MemoryConfig(t *testing.T) {
 	tmpDir := t.TempDir()
 	configPath := filepath.Join(tmpDir, "claude_config.json")

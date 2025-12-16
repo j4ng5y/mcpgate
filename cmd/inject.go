@@ -33,7 +33,9 @@ Supported agents:
   - Zed (local configuration)
   - Gemini CLI (local configuration)
   - Codex CLI (local configuration)
-  - OpenCode (local configuration)`,
+  - OpenCode (local configuration)
+  - Windsurf (local configuration)
+  - Kiro (local configuration)`,
 	Run: runInject,
 }
 
@@ -41,7 +43,7 @@ func init() {
 	injectCmd.Flags().StringVar(&injectMode, "mode", "stdio", "Connection mode: stdio (subprocess) or http (HTTP server)")
 	injectCmd.Flags().StringVar(&injectURL, "url", "", "URL to the mcpgate server (HTTP mode only)")
 	injectCmd.Flags().StringVar(&injectName, "name", "mcpgate", "Name for the mcpgate server entry")
-	injectCmd.Flags().StringVar(&injectAgents, "agents", "all", "Comma-separated list of agents to inject into (all, claude, cursor, zed, codex-cli, gemini-cli, opencode)")
+	injectCmd.Flags().StringVar(&injectAgents, "agents", "all", "Comma-separated list of agents to inject into (all, claude, cursor, zed, codex-cli, gemini-cli, opencode, windsurf, kiro)")
 	injectCmd.Flags().StringVar(&injectConfig, "config", "", "Path to mcpgate config file (stdio mode only)")
 	injectCmd.Flags().BoolVar(&doEject, "eject", false, "Remove mcpgate from agent configs instead of injecting")
 }
@@ -78,6 +80,8 @@ func runInject(cmd *cobra.Command, args []string) {
 		manager.RegisterAgent(inject.NewCodexCLI())
 		manager.RegisterAgent(inject.NewGeminiCLI())
 		manager.RegisterAgent(inject.NewOpenCode())
+		manager.RegisterAgent(inject.NewWindsurf())
+		manager.RegisterAgent(inject.NewKiro())
 
 		if doEject {
 			handleEject(manager)
@@ -99,6 +103,8 @@ func runInject(cmd *cobra.Command, args []string) {
 		manager.RegisterAgent(inject.NewCodexCLI())
 		manager.RegisterAgent(inject.NewGeminiCLI())
 		manager.RegisterAgent(inject.NewOpenCode())
+		manager.RegisterAgent(inject.NewWindsurf())
+		manager.RegisterAgent(inject.NewKiro())
 
 		if doEject {
 			handleEject(manager)
@@ -301,6 +307,8 @@ func isAgentMatch(agentName, identifier string) bool {
 		"codex-cli":  {"Codex CLI", "codex-cli", "codex"},
 		"gemini-cli": {"Gemini CLI", "gemini-cli", "gemini"},
 		"opencode":   {"OpenCode", "opencode"},
+		"windsurf":   {"Windsurf", "windsurf"},
+		"kiro":       {"Kiro", "kiro"},
 	}
 
 	if names, ok := matches[identifier]; ok {
