@@ -355,6 +355,51 @@ If requests aren't routing correctly:
 2. Explicitly specify `_server` parameter for testing
 3. Review method prefix matching in router
 
+## CI/CD Pipeline
+
+MCPGate uses GitHub Actions for automated testing, linting, and releases:
+
+### Testing Workflow (`.github/workflows/test.yml`)
+
+Runs on every push to `main` and all pull requests:
+
+- **Matrix Testing**: Tests on Go 1.25 and 1.26 across Ubuntu, macOS, and Windows
+- **Unit Tests**: `go test -v -race` with coverage reporting
+- **Linting**: `golangci-lint` with automatic checks
+- **Build Verification**: Snapshot builds to ensure artifacts are created
+- **Coverage Upload**: Sends coverage reports to Codecov
+
+Run locally:
+```bash
+make test      # Run unit tests
+make lint      # Run linters
+make build     # Build snapshot
+```
+
+### Release Workflow (`.github/workflows/release.yml`)
+
+Automatically triggered when a git tag is pushed (format: `v*`):
+
+- **Pre-release Testing**: Runs all tests before building
+- **Multi-platform Builds**: Creates binaries for Linux, macOS, Windows (amd64, arm64, arm)
+- **Binary Compression**: Uses UPX compression for smaller artifacts
+- **Checksums**: Generates SHA256 checksums for all artifacts
+- **GitHub Release**: Creates a GitHub release with artifacts and auto-generated changelog
+
+Create a release:
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+# GitHub Actions will automatically build and publish the release
+```
+
+### Dependency Management
+
+Dependabot automatically:
+- Creates pull requests for Go module updates (weekly)
+- Updates GitHub Actions to latest versions (weekly)
+- Labels PRs for easy organization
+
 ## Contributing
 
 Contributions are welcome! Please:
@@ -363,7 +408,11 @@ Contributions are welcome! Please:
 2. Create a feature branch
 3. Make your changes
 4. Add tests if applicable
-5. Submit a pull request
+5. Ensure all checks pass:
+   - `make test` - Unit tests pass
+   - `make lint` - Linting passes
+   - `make fmt` - Code is formatted
+6. Submit a pull request (use the PR template)
 
 ## License
 

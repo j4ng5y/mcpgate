@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Documentation
+    url: https://github.com/j4ng5y/mcpgate#readme
+    about: Read the project documentation
+  - name: Discussions
+    url: https://github.com/j4ng5y/mcpgate/discussions
+    about: Ask questions or discuss features
+  - name: Security Issue
+    url: https://github.com/j4ng5y/mcpgate/security/advisories/new
+    about: Report a security vulnerability privately
