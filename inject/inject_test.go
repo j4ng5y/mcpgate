@@ -44,11 +44,14 @@ func TestManager_ListInstalledAgents(t *testing.T) {
 
 	installed := manager.ListInstalledAgents()
 
-	// Note: This might be 0, 1, 2, or 3 depending on what's installed locally
-	// We're just checking that the function runs without error
+	// The function always returns a slice (never nil), even if empty
+	// On CI runners, no agents will actually be installed
+	// Just verify we get a slice back
 	if installed == nil {
-		t.Error("Expected non-nil installed agents list")
+		t.Fatal("Expected non-nil installed agents list, got nil")
 	}
+	// List may be empty on CI if agents aren't installed locally
+	// That's expected behavior
 }
 
 func TestClaude_ExpandPath(t *testing.T) {
