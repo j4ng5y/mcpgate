@@ -1,0 +1,87 @@
+# MCPGate Configuration File
+
+[gateway]
+# Logging level: debug, info, warn, error
+log_level = "info"
+
+# Optional: log file path (if not set, logs to stdout)
+# log_file = "/var/log/mcpgate/mcpgate.log"
+
+# Define upstream MCP servers
+
+[[server]]
+# Server name for identification and routing
+name = "bedrock"
+
+# Transport type: stdio, http, websocket, unix
+transport = "stdio"
+
+# Whether this server is enabled
+enabled = true
+
+# For stdio transport:
+command = "node"
+args = ["./node_modules/@anthropic-ai/sdk/lib/bedrock.js"]
+
+# Environment variables to pass to the subprocess
+[server.env]
+# AWS_REGION = "us-east-1"
+# ANTHROPIC_API_KEY = "your-key-here"
+
+# Timeout in seconds (default: 30)
+timeout = 30
+
+# Optional metadata
+[server.metadata]
+description = "Bedrock model provider"
+version = "1.0.0"
+
+
+[[server]]
+name = "filesystem"
+transport = "stdio"
+enabled = true
+
+command = "python"
+args = ["-m", "mcp_server_filesystem", "--root", "/home/user/documents"]
+
+timeout = 30
+
+
+# HTTP-based server example
+[[server]]
+name = "remote-tools"
+transport = "http"
+enabled = false
+
+# HTTP endpoint URL
+url = "http://localhost:8000"
+
+timeout = 30
+
+[server.metadata]
+description = "Remote tools server"
+
+
+# WebSocket example
+[[server]]
+name = "realtime-data"
+transport = "websocket"
+enabled = false
+
+# WebSocket URL
+url = "ws://localhost:9000"
+
+timeout = 30
+
+
+# Unix socket example
+[[server]]
+name = "local-socket"
+transport = "unix"
+enabled = false
+
+# Unix socket path
+socket_path = "/tmp/mcp-server.sock"
+
+timeout = 30
