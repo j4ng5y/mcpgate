@@ -31,8 +31,8 @@ Supported agents:
   - Claude Desktop (local configuration)
   - Cursor (local configuration)
   - Zed (local configuration)
-  - GitHub Codex (cloud service - information only)
-  - Google Gemini (cloud service - information only)
+  - Gemini CLI (local configuration)
+  - Codex CLI (local configuration)
   - OpenCode (coming soon)`,
 	Run: runInject,
 }
@@ -41,7 +41,7 @@ func init() {
 	injectCmd.Flags().StringVar(&injectMode, "mode", "stdio", "Connection mode: stdio (subprocess) or http (HTTP server)")
 	injectCmd.Flags().StringVar(&injectURL, "url", "", "URL to the mcpgate server (HTTP mode only)")
 	injectCmd.Flags().StringVar(&injectName, "name", "mcpgate", "Name for the mcpgate server entry")
-	injectCmd.Flags().StringVar(&injectAgents, "agents", "all", "Comma-separated list of agents to inject into (all, claude, cursor, zed, codex, gemini, opencode)")
+	injectCmd.Flags().StringVar(&injectAgents, "agents", "all", "Comma-separated list of agents to inject into (all, claude, cursor, zed, codex-cli, gemini-cli, opencode)")
 	injectCmd.Flags().StringVar(&injectConfig, "config", "", "Path to mcpgate config file (stdio mode only)")
 	injectCmd.Flags().BoolVar(&doEject, "eject", false, "Remove mcpgate from agent configs instead of injecting")
 }
@@ -75,8 +75,8 @@ func runInject(cmd *cobra.Command, args []string) {
 		manager.RegisterAgent(inject.NewClaude())
 		manager.RegisterAgent(inject.NewCursor())
 		manager.RegisterAgent(inject.NewZed())
-		manager.RegisterAgent(inject.NewCodex())
-		manager.RegisterAgent(inject.NewGemini())
+		manager.RegisterAgent(inject.NewCodexCLI())
+		manager.RegisterAgent(inject.NewGeminiCLI())
 		manager.RegisterAgent(inject.NewOpenCode())
 
 		if doEject {
@@ -96,8 +96,8 @@ func runInject(cmd *cobra.Command, args []string) {
 		manager.RegisterAgent(inject.NewClaude())
 		manager.RegisterAgent(inject.NewCursor())
 		manager.RegisterAgent(inject.NewZed())
-		manager.RegisterAgent(inject.NewCodex())
-		manager.RegisterAgent(inject.NewGemini())
+		manager.RegisterAgent(inject.NewCodexCLI())
+		manager.RegisterAgent(inject.NewGeminiCLI())
 		manager.RegisterAgent(inject.NewOpenCode())
 
 		if doEject {
@@ -118,8 +118,8 @@ func handleInjectStdio(manager *inject.Manager, command string, args []string) {
 		fmt.Println("  - Claude Desktop")
 		fmt.Println("  - Cursor")
 		fmt.Println("  - Zed")
-		fmt.Println("  - GitHub Codex (cloud service)")
-		fmt.Println("  - Google Gemini (cloud service)")
+		fmt.Println("  - Gemini CLI")
+		fmt.Println("  - Codex CLI")
 		fmt.Println("  - OpenCode")
 		return
 	}
@@ -186,8 +186,8 @@ func handleInjectHTTP(manager *inject.Manager) {
 		fmt.Println("  - Claude Desktop")
 		fmt.Println("  - Cursor")
 		fmt.Println("  - Zed")
-		fmt.Println("  - GitHub Codex (cloud service)")
-		fmt.Println("  - Google Gemini (cloud service)")
+		fmt.Println("  - Gemini CLI")
+		fmt.Println("  - Codex CLI")
 		fmt.Println("  - OpenCode")
 		return
 	}
@@ -295,12 +295,12 @@ func parseAgentList(agents string) []string {
 // isAgentMatch checks if an agent name matches a given identifier
 func isAgentMatch(agentName, identifier string) bool {
 	matches := map[string][]string{
-		"claude":   {"Claude Desktop", "claude"},
-		"cursor":   {"Cursor", "cursor"},
-		"zed":      {"Zed", "zed"},
-		"codex":    {"GitHub Codex", "codex"},
-		"gemini":   {"Google Gemini", "gemini"},
-		"opencode": {"OpenCode", "opencode"},
+		"claude":     {"Claude Desktop", "claude"},
+		"cursor":     {"Cursor", "cursor"},
+		"zed":        {"Zed", "zed"},
+		"codex-cli":  {"Codex CLI", "codex-cli", "codex"},
+		"gemini-cli": {"Gemini CLI", "gemini-cli", "gemini"},
+		"opencode":   {"OpenCode", "opencode"},
 	}
 
 	if names, ok := matches[identifier]; ok {

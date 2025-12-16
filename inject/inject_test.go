@@ -109,17 +109,17 @@ func TestZed_Name(t *testing.T) {
 	}
 }
 
-func TestCodex_Name(t *testing.T) {
-	codex := NewCodex()
-	if codex.Name() != "GitHub Codex" {
-		t.Errorf("Expected name 'GitHub Codex', got '%s'", codex.Name())
+func TestCodexCLI_Name(t *testing.T) {
+	codexcli := NewCodexCLI()
+	if codexcli.Name() != "Codex CLI" {
+		t.Errorf("Expected name 'Codex CLI', got '%s'", codexcli.Name())
 	}
 }
 
-func TestGemini_Name(t *testing.T) {
-	gemini := NewGemini()
-	if gemini.Name() != "Google Gemini" {
-		t.Errorf("Expected name 'Google Gemini', got '%s'", gemini.Name())
+func TestGeminiCLI_Name(t *testing.T) {
+	geminicli := NewGeminiCLI()
+	if geminicli.Name() != "Gemini CLI" {
+		t.Errorf("Expected name 'Gemini CLI', got '%s'", geminicli.Name())
 	}
 }
 
@@ -280,39 +280,87 @@ func TestZed_InjectStdio_MemoryConfig(t *testing.T) {
 	}
 }
 
-func TestCloudServices_NotInstalled(t *testing.T) {
-	codex := NewCodex()
-	if codex.IsInstalled() {
-		t.Error("Codex should not be installed (cloud service)")
+func TestGeminiCLI_InjectHTTP_MemoryConfig(t *testing.T) {
+	tmpDir := t.TempDir()
+	configPath := filepath.Join(tmpDir, "gemini_settings.json")
+
+	geminicli := NewGeminiCLI()
+	// Override config path for testing
+	geminicli.configPath = configPath
+
+	// Test that we can inject via HTTP
+	err := geminicli.InjectHTTP("http://localhost:8000", "mcpgate", nil)
+	if err != nil {
+		t.Fatalf("Failed to inject HTTP: %v", err)
 	}
 
-	gemini := NewGemini()
-	if gemini.IsInstalled() {
-		t.Error("Gemini should not be installed (cloud service)")
+	// Test that IsInjected returns true after injection
+	isInjected := geminicli.IsInjected("mcpgate")
+	if !isInjected {
+		t.Error("Expected IsInjected to return true after HTTP injection")
 	}
 }
 
-func TestCloudServices_OperationsFail(t *testing.T) {
-	codex := NewCodex()
+func TestGeminiCLI_InjectStdio_MemoryConfig(t *testing.T) {
+	tmpDir := t.TempDir()
+	configPath := filepath.Join(tmpDir, "gemini_settings.json")
 
-	_, err := codex.GetConfigPath()
-	if err == nil {
-		t.Error("Expected error from Codex.GetConfigPath()")
+	geminicli := NewGeminiCLI()
+	// Override config path for testing
+	geminicli.configPath = configPath
+
+	// Test that we can inject via stdio
+	err := geminicli.InjectStdio("/path/to/mcpgate", []string{"server"}, "mcpgate", nil)
+	if err != nil {
+		t.Fatalf("Failed to inject stdio: %v", err)
 	}
 
-	err = codex.CreateBackup()
-	if err == nil {
-		t.Error("Expected error from Codex.CreateBackup()")
+	// Test that IsInjected returns true after injection
+	isInjected := geminicli.IsInjected("mcpgate")
+	if !isInjected {
+		t.Error("Expected IsInjected to return true after stdio injection")
+	}
+}
+
+func TestCodexCLI_InjectHTTP_MemoryConfig(t *testing.T) {
+	tmpDir := t.TempDir()
+	configPath := filepath.Join(tmpDir, "codex_config.toml")
+
+	codexcli := NewCodexCLI()
+	// Override config path for testing
+	codexcli.configPath = configPath
+
+	// Test that we can inject via HTTP
+	err := codexcli.InjectHTTP("http://localhost:8000", "mcpgate", nil)
+	if err != nil {
+		t.Fatalf("Failed to inject HTTP: %v", err)
 	}
 
-	err = codex.InjectHTTP("http://localhost:8000", "mcpgate", nil)
-	if err == nil {
-		t.Error("Expected error from Codex.InjectHTTP()")
+	// Test that IsInjected returns true after injection
+	isInjected := codexcli.IsInjected("mcpgate")
+	if !isInjected {
+		t.Error("Expected IsInjected to return true after HTTP injection")
+	}
+}
+
+func TestCodexCLI_InjectStdio_MemoryConfig(t *testing.T) {
+	tmpDir := t.TempDir()
+	configPath := filepath.Join(tmpDir, "codex_config.toml")
+
+	codexcli := NewCodexCLI()
+	// Override config path for testing
+	codexcli.configPath = configPath
+
+	// Test that we can inject via stdio
+	err := codexcli.InjectStdio("/path/to/mcpgate", []string{"server"}, "mcpgate", nil)
+	if err != nil {
+		t.Fatalf("Failed to inject stdio: %v", err)
 	}
 
-	err = codex.InjectStdio("/path/to/mcpgate", []string{"server"}, "mcpgate", nil)
-	if err == nil {
-		t.Error("Expected error from Codex.InjectStdio()")
+	// Test that IsInjected returns true after injection
+	isInjected := codexcli.IsInjected("mcpgate")
+	if !isInjected {
+		t.Error("Expected IsInjected to return true after stdio injection")
 	}
 }
 
